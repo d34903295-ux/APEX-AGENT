@@ -1,0 +1,69 @@
+// TickerBar Styles
+
+.ticker-bar {
+  width: 100%;
+  background: $bg-elevated;
+  border-bottom: 1px solid $border;
+  overflow: hidden;
+  padding: $space-sm 0;
+
+  &__track {
+    display: flex;
+    gap: $space-xl;
+    animation: tickerScroll 30s linear infinite;
+    width: max-content;
+
+    &:hover {
+      animation-play-state: paused;
+    }
+  }
+}
+
+.ticker-item {
+  display: flex;
+  align-items: center;
+  gap: $space-sm;
+  flex-shrink: 0;
+  padding: 0 $space-sm;
+  cursor: default;
+
+  &__symbol {
+    font-family: $font-mono;
+    font-size: 10px;
+    font-weight: 700;
+    color: $text-primary;
+    letter-spacing: 0.05em;
+  }
+
+  &__price {
+    font-family: $font-mono;
+    font-size: 10px;
+    font-weight: 500;
+
+    &--up { color: $accent-emerald; }
+    &--down { color: $accent-rose; }
+  }
+
+  &__change {
+    font-family: $font-mono;
+    font-size: 9px;
+    font-weight: 500;
+    padding: 1px 4px;
+    border-radius: 3px;
+
+    &--up {
+      color: $accent-emerald;
+      background: rgba(52, 211, 153, 0.1);
+    }
+    &--down {
+      color: $accent-rose;
+      background: rgba(248, 113, 113, 0.1);
+    }
+  }
+
+  &__spark {
+    width: 48px;
+    height: 16px;
+    flex-shrink: 0;
+  }
+}

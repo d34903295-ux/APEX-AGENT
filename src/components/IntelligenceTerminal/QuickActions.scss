@@ -1,0 +1,44 @@
+// QuickActions styles (appended to IntelligenceTerminal)
+
+.quick-actions {
+  padding: 0 $space-lg;
+  margin-bottom: $space-lg;
+  overflow: hidden;
+
+  &__scroll {
+    display: flex;
+    gap: $space-sm;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar { display: none; }
+  }
+
+  &__pill {
+    flex-shrink: 0;
+    font-family: $font-mono;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    color: $accent-cyan;
+    background: transparent;
+    border: 1px solid rgba(0, 209, 255, 0.25);
+    padding: 6px 14px;
+    border-radius: $radius-full;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all 0.25s $ease-jarvis;
+
+    &:hover {
+      background: rgba(0, 209, 255, 0.08);
+      border-color: rgba(0, 209, 255, 0.4);
+      box-shadow: 0 0 12px rgba(0, 209, 255, 0.15);
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+  }
+}

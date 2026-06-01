@@ -1,0 +1,96 @@
+// Ledger Styles
+
+.ledger {
+  margin-bottom: $space-lg;
+
+  &__sim-btn {
+    font-family: $font-mono;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: $accent-cyan;
+    background: transparent;
+    border: 1px solid rgba(0, 209, 255, 0.25);
+    padding: 4px 10px;
+    border-radius: $radius-full;
+    cursor: pointer;
+    transition: all 0.25s $ease-jarvis;
+
+    &:hover {
+      background: rgba(0, 209, 255, 0.08);
+      box-shadow: $shadow-cyan-sm;
+    }
+  }
+
+  &__list {
+    margin: 0 $space-lg;
+    background: $bg-elevated;
+    border: 1px solid $border;
+    border-radius: $radius-md;
+    overflow: hidden;
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: $space-md;
+    padding: $space-md $space-lg;
+    border-bottom: 1px solid rgba(255,255,255,0.02);
+    transition: background 0.2s ease;
+
+    &:last-child { border-bottom: none; }
+    &:hover { background: rgba(255,255,255,0.02); }
+  }
+
+  &__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  &__info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__desc {
+    font-family: $font-sans;
+    font-size: 11px;
+    font-weight: 500;
+    color: $text-primary;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__meta {
+    display: flex;
+    gap: $space-sm;
+    margin-top: 2px;
+  }
+
+  &__type {
+    font-family: $font-mono;
+    font-size: 8px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: $text-dim;
+    background: rgba(255,255,255,0.04);
+    padding: 1px 6px;
+    border-radius: 3px;
+  }
+
+  &__date {
+    font-family: $font-mono;
+    font-size: 8px;
+    color: $text-dim;
+  }
+
+  &__amount {
+    font-size: 12px;
+    font-weight: 600;
+    flex-shrink: 0;
+    text-align: right;
+  }
+}

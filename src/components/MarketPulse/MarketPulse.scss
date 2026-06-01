@@ -1,0 +1,94 @@
+// MarketPulse Styles
+
+.market-pulse {
+  padding: 0 $space-lg;
+  margin-bottom: $space-lg;
+
+  &__btc {
+    font-size: 10px;
+    color: $text-muted;
+  }
+
+  &__alert {
+    display: flex;
+    align-items: flex-start;
+    gap: $space-md;
+    padding: $space-md;
+    border-radius: $radius-sm;
+    background: $bg-elevated;
+    border: 1px solid $border;
+    position: relative;
+
+    &--gold { border-left: 2px solid $accent-gold; }
+    &--rose { border-left: 2px solid $accent-rose; }
+    &--emerald { border-left: 2px solid $accent-emerald; }
+  }
+
+  &__icon {
+    font-size: 18px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  &__content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__title {
+    font-family: $font-mono;
+    font-size: 11px;
+    font-weight: 600;
+    color: $text-primary;
+    margin-bottom: 3px;
+  }
+
+  &__desc {
+    font-family: $font-sans;
+    font-size: 11px;
+    color: $text-muted;
+    line-height: 1.4;
+  }
+
+  &__dots {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding-top: 4px;
+  }
+
+  &__dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.15);
+    transition: all 0.3s ease;
+
+    &--active {
+      background: $accent-cyan;
+      box-shadow: 0 0 4px rgba(0, 209, 255, 0.5);
+    }
+  }
+}
+.market-pulse__controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+.market-pulse__timer {
+  width: 3px;
+  height: 24px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+}
+.market-pulse__timer-fill {
+  width: 100%;
+  background: #8a8f98;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}

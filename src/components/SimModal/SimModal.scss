@@ -1,0 +1,229 @@
+// SimModal Styles
+
+.sim-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: $space-xl;
+}
+
+.sim-modal {
+  width: 100%;
+  max-width: 380px;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: $bg-elevated;
+  border: 1px solid $border;
+  border-radius: 2rem;
+  padding: $space-xl;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: $space-xl;
+  }
+
+  &__title {
+    font-family: $font-mono;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    color: $accent-cyan;
+  }
+
+  &__close {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid $border;
+    color: $text-muted;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: rgba(255,255,255,0.08);
+      color: $text-primary;
+    }
+  }
+
+  &__field {
+    margin-bottom: $space-lg;
+  }
+
+  &__label {
+    display: block;
+    font-family: $font-mono;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    color: $text-dim;
+    margin-bottom: $space-sm;
+  }
+
+  &__types {
+    display: flex;
+    gap: $space-sm;
+  }
+
+  &__type-btn {
+    flex: 1;
+    padding: 8px 0;
+    font-family: $font-mono;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    border-radius: $radius-sm;
+    border: 1px solid $border;
+    background: transparent;
+    color: $text-muted;
+    cursor: pointer;
+    transition: all 0.25s $ease-jarvis;
+
+    &--active {
+      color: $text-primary;
+    }
+
+    &--emerald.sim-modal__type-btn--active {
+      border-color: rgba(52, 211, 153, 0.4);
+      background: rgba(52, 211, 153, 0.1);
+      color: $accent-emerald;
+    }
+
+    &--cyan.sim-modal__type-btn--active {
+      border-color: rgba(0, 209, 255, 0.4);
+      background: rgba(0, 209, 255, 0.1);
+      color: $accent-cyan;
+    }
+
+    &--rose.sim-modal__type-btn--active {
+      border-color: rgba(248, 113, 113, 0.4);
+      background: rgba(248, 113, 113, 0.1);
+      color: $accent-rose;
+    }
+
+    &:hover {
+      border-color: rgba(255,255,255,0.12);
+    }
+
+    &--gold.sim-modal__type-btn--active {
+      border-color: rgba(251,191,36,0.4);
+      background: rgba(251,191,36,0.1);
+      color: #FBBF24;
+    }
+  }
+
+  &__row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+    .sim-modal__field {
+      flex: 1;
+      margin-bottom: 0;
+    }
+  }
+
+  &__asset-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+  }
+
+  &__asset-btn {
+    padding: 8px 4px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.03);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &--active {
+      border-color: rgba(0,209,255,0.4);
+      background: rgba(0,209,255,0.1);
+    }
+    &--crypto.sim-modal__asset-btn--active {
+      border-color: rgba(52,211,153,0.4);
+      background: rgba(52,211,153,0.08);
+    }
+    &:hover { background: rgba(255,255,255,0.06); }
+  }
+
+  &__preview {
+    padding: 10px 14px;
+    border-radius: 8px;
+    background: rgba(0,209,255,0.06);
+    border: 1px solid rgba(0,209,255,0.2);
+    font-family: 'Fira Code', monospace;
+    font-size: 11px;
+    color: #00D1FF;
+    margin-bottom: 16px;
+    line-height: 1.5;
+  }
+
+  &__input {
+    width: 100%;
+    background: $bg-base;
+    border: 1px solid $border;
+    border-radius: $radius-sm;
+    padding: 12px 14px;
+    font-family: $font-mono;
+    font-size: 13px;
+    color: $text-primary;
+    transition: all 0.3s $ease-jarvis;
+
+    &:focus {
+      outline: none;
+      border-color: $accent-cyan;
+      box-shadow: 0 0 0 2px rgba(0, 209, 255, 0.12);
+    }
+
+    &::placeholder {
+      color: $text-dim;
+      font-size: 11px;
+    }
+  }
+
+  &__confirm {
+    width: 100%;
+    padding: 14px 24px;
+    margin-top: $space-sm;
+    background: linear-gradient(135deg, $accent-cyan, $accent-blue);
+    color: #000;
+    font-family: $font-mono;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    border: none;
+    border-radius: $radius-sm;
+    cursor: pointer;
+    box-shadow: $shadow-cyan;
+    transition: all 0.3s $ease-jarvis;
+
+    &:hover {
+      box-shadow: 0 0 35px rgba(0, 209, 255, 0.5);
+      transform: translateY(-1px);
+    }
+
+    &:active { transform: scale(0.97); }
+
+    &:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+  }
+}

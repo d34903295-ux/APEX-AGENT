@@ -1,0 +1,107 @@
+@use '../../styles/variables' as *;
+
+.voice-console-wrapper {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.voice-console-card {
+  width: 100%;
+  max-width: 500px;
+  background: linear-gradient(180deg, rgba(0, 209, 255, 0.08) 0%, rgba(0, 209, 255, 0.02) 100%), #0a0a0c;
+  border: 1px solid rgba(0, 209, 255, 0.2);
+  border-radius: 24px;
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 2px 12px rgba(0, 209, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(rgba(0, 209, 255, 0.1) 1px, transparent 1px);
+    background-size: 8px 8px;
+    opacity: 0.3;
+    pointer-events: none;
+  }
+
+  &__mic {
+    position: relative;
+    z-index: 2;
+    flex-shrink: 0;
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: #00D1FF;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #020203;
+    cursor: pointer;
+    box-shadow: 0 0 20px rgba(0, 209, 255, 0.5), inset 0 0 10px rgba(255, 255, 255, 0.4);
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 30px rgba(0, 209, 255, 0.7), inset 0 0 15px rgba(255, 255, 255, 0.5);
+    }
+
+    &.active {
+      animation: mic-pulse 1.5s infinite alternate;
+    }
+  }
+
+  &__content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 8px;
+    z-index: 2;
+  }
+
+  &__text {
+    font-family: $font-sans;
+    font-size: 15px;
+    font-style: italic;
+    color: rgba(255, 255, 255, 0.8);
+    margin: 0;
+    letter-spacing: 0.02em;
+  }
+}
+
+.voice-console-footnote {
+  font-family: $font-sans;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.3);
+  align-self: flex-start;
+  padding-left: 12px;
+}
+
+.voice-led {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+
+  &__bar {
+    width: 4px;
+    background: #00D1FF;
+    border-radius: 4px;
+    transition: height 0.15s ease, opacity 0.15s ease;
+    box-shadow: 0 0 8px rgba(0, 209, 255, 0.4);
+  }
+}
+
+@keyframes mic-pulse {
+  0% { box-shadow: 0 0 20px rgba(0, 209, 255, 0.5), inset 0 0 10px rgba(255, 255, 255, 0.4); }
+  100% { box-shadow: 0 0 40px rgba(0, 209, 255, 0.8), inset 0 0 20px rgba(255, 255, 255, 0.6); transform: scale(1.02); }
+}

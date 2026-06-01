@@ -1,0 +1,64 @@
+// ════════════════════════════════════════════════════════════════════
+// APEX FINANCIAL — DESIGN TOKENS
+// JARVIS × Bloomberg Terminal × Cyberpunk HUD
+// ════════════════════════════════════════════════════════════════════
+
+// ─── BACKGROUNDS ─────────────────────────────────────────────────
+$bg-void:       #020203;
+$bg-base:       #050506;
+$bg-elevated:   #0a0a0c;
+$bg-surface:    rgba(255, 255, 255, 0.03);
+$bg-surface-hover: rgba(255, 255, 255, 0.05);
+
+// ─── ACCENT COLORS ──────────────────────────────────────────────
+$accent-cyan:    #00D1FF;
+$accent-cyan-dim: rgba(0, 209, 255, 0.15);
+$accent-emerald: #34D399;
+$accent-rose:    #f87171;
+$accent-gold:    #FBBF24;
+$accent-blue:    #0077FF;
+
+// ─── BORDERS ────────────────────────────────────────────────────
+$border:        rgba(255, 255, 255, 0.06);
+$border-active: rgba(0, 209, 255, 0.3);
+$border-cyan:   rgba(0, 209, 255, 0.2);
+
+// ─── TEXT ───────────────────────────────────────────────────────
+$text-primary:  #EDEDEF;
+$text-muted:    #8A8F98;
+$text-dim:      rgba(255, 255, 255, 0.4);
+
+// ─── TYPOGRAPHY ─────────────────────────────────────────────────
+$font-mono:  'Fira Code', 'Cascadia Code', 'JetBrains Mono', monospace;
+$font-sans:  'Fira Sans', 'Segoe UI', sans-serif;
+
+// ─── SPACING ────────────────────────────────────────────────────
+$space-xs:  4px;
+$space-sm:  8px;
+$space-md:  12px;
+$space-lg:  16px;
+$space-xl:  24px;
+$space-2xl: 32px;
+$space-3xl: 48px;
+
+// ─── RADIUS ─────────────────────────────────────────────────────
+$radius-sm:  8px;
+$radius-md:  12px;
+$radius-lg:  16px;
+$radius-xl:  24px;
+$radius-full: 9999px;
+
+// ─── SHADOWS ────────────────────────────────────────────────────
+$shadow-cyan:    0 0 25px rgba(0, 209, 255, 0.4);
+$shadow-cyan-sm: 0 0 12px rgba(0, 209, 255, 0.2);
+$shadow-emerald: 0 0 20px rgba(52, 211, 153, 0.3);
+$shadow-rose:    0 0 20px rgba(248, 113, 113, 0.3);
+
+// ─── EASING ─────────────────────────────────────────────────────
+$ease-jarvis: cubic-bezier(0.16, 1, 0.3, 1);
+$ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+// ─── LAYOUT ─────────────────────────────────────────────────────
+$app-max-width: 430px;
+$nav-height: 64px;
+$voice-height: 220px;

@@ -1,0 +1,84 @@
+// Dashboard Header Styles
+
+.dash-header {
+  padding: $space-lg $space-lg $space-md;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  position: relative;
+
+  &__left {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__brand {
+    font-family: $font-mono;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.25em;
+    color: $accent-cyan;
+    text-transform: uppercase;
+  }
+
+  &__title {
+    font-family: $font-sans;
+    font-size: 20px;
+    font-weight: 300;
+    color: $text-primary;
+    margin-top: 2px;
+  }
+
+  &__right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-top: 4px;
+  }
+
+  &__badge--mcp {
+    color: $accent-cyan;
+    background: rgba(0, 209, 255, 0.08);
+    border-color: rgba(0, 209, 255, 0.25);
+  }
+
+  &__dot--mcp {
+    background: $accent-cyan;
+    box-shadow: 0 0 6px rgba(0, 209, 255, 0.5);
+  }
+
+  &__badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: $font-mono;
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    color: $accent-emerald;
+    background: rgba(52, 211, 153, 0.08);
+    border: 1px solid rgba(52, 211, 153, 0.2);
+    padding: 4px 10px;
+    border-radius: $radius-full;
+  }
+
+  &__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: $accent-emerald;
+    animation: pulse 2s ease-in-out infinite;
+    box-shadow: 0 0 6px rgba(52, 211, 153, 0.5);
+  }
+
+  &__divider {
+    position: absolute;
+    bottom: 0;
+    left: $space-lg;
+    right: $space-lg;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, $accent-cyan, transparent);
+    opacity: 0.2;
+  }
+}

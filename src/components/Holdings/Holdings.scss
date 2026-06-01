@@ -1,0 +1,122 @@
+// Holdings Table Styles
+
+.holdings {
+  margin-bottom: $space-lg;
+
+  &__table-wrap {
+    margin: 0 $space-lg;
+    overflow-x: auto;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    &::-webkit-scrollbar { display: none; }
+  }
+
+  &__table {
+    width: 100%;
+    border-collapse: collapse;
+    background: $bg-elevated;
+    border: 1px solid $border;
+    border-radius: $radius-md;
+    overflow: hidden;
+
+    th {
+      font-family: $font-mono;
+      font-size: 8px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      color: $text-dim;
+      text-transform: uppercase;
+      text-align: left;
+      padding: $space-sm $space-md;
+      border-bottom: 1px solid $border;
+      background: rgba(255,255,255,0.01);
+    }
+
+    td {
+      padding: $space-sm $space-md;
+      border-bottom: 1px solid rgba(255,255,255,0.02);
+      font-size: 11px;
+    }
+  }
+
+  &__row {
+    transition: background 0.2s ease;
+
+    &:hover {
+      background: rgba(255,255,255,0.02);
+    }
+
+    &:last-child td {
+      border-bottom: none;
+    }
+  }
+
+  &__asset {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &__logo {
+    border-radius: 50%;
+    object-fit: contain;
+    background: rgba(255, 255, 255, 0.05);
+    flex-shrink: 0;
+  }
+
+  &__symbol {
+    font-family: $font-mono;
+    font-size: 11px;
+    font-weight: 700;
+    color: $text-primary;
+  }
+
+  &__name {
+    font-family: $font-sans;
+    font-size: 9px;
+    color: $text-dim;
+  }
+
+  &__num {
+    font-size: 11px;
+    font-weight: 500;
+    color: $text-muted;
+    text-align: left;
+  }
+
+  &__total {
+    font-weight: 700;
+    color: $text-primary;
+  }
+}
+.holdings__pnl {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 10px;
+  font-weight: 600;
+}
+.holdings__pnl--up {
+  background: rgba(52, 211, 153, 0.15);
+  color: #34d399;
+}
+.holdings__pnl--down {
+  background: rgba(244, 63, 94, 0.15);
+  color: #f43f5e;
+}
+.holdings__logo-placeholder {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: bold;
+  flex-shrink: 0;
+  color: #fff;
+}

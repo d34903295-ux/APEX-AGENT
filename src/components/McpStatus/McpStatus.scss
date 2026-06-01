@@ -1,0 +1,120 @@
+.mcp-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Fira Code', monospace;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  padding: 4px 10px;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 209, 255, 0.25);
+  background: rgba(0, 209, 255, 0.06);
+  color: #00D1FF;
+
+  &--connected {
+    border-color: rgba(52, 211, 153, 0.35);
+    background: rgba(52, 211, 153, 0.08);
+    color: #34D399;
+  }
+
+  &--error {
+    border-color: rgba(248, 113, 113, 0.35);
+    background: rgba(248, 113, 113, 0.08);
+    color: #f87171;
+  }
+
+  &--syncing .mcp-badge__dot {
+    animation: mcp-pulse 0.8s ease-in-out infinite;
+  }
+
+  &__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    box-shadow: 0 0 8px currentColor;
+  }
+}
+
+.mcp-status {
+  margin: 8px 16px 0;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 209, 255, 0.15);
+  background: linear-gradient(135deg, rgba(0, 209, 255, 0.04) 0%, rgba(2, 2, 3, 0.8) 100%);
+
+  &--connected {
+    border-color: rgba(52, 211, 153, 0.2);
+  }
+
+  &--error {
+    border-color: rgba(248, 113, 113, 0.25);
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+
+  &__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #00D1FF;
+    box-shadow: 0 0 10px #00D1FF;
+  }
+
+  &--connected &__dot {
+    background: #34D399;
+    box-shadow: 0 0 10px #34D399;
+  }
+
+  &--error &__dot {
+    background: #f87171;
+    box-shadow: 0 0 10px #f87171;
+  }
+
+  &__title {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: #e8eaed;
+  }
+
+  &__label {
+    margin-left: auto;
+    font-family: 'Fira Code', monospace;
+    font-size: 9px;
+    color: #8A8F98;
+  }
+
+  &__tools {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 4px;
+  }
+
+  &__tool {
+    font-size: 8px;
+    font-family: 'Fira Code', monospace;
+    padding: 2px 6px;
+    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.04);
+    color: #8A8F98;
+    text-transform: uppercase;
+  }
+
+  &__sync {
+    font-size: 9px;
+    color: #8A8F98;
+    margin-top: 6px;
+  }
+}
+
+@keyframes mcp-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.85); }
+}

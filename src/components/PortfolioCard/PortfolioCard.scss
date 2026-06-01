@@ -1,0 +1,103 @@
+// PortfolioCard Styles
+
+.portfolio-card {
+  margin: $space-lg;
+  position: relative;
+  overflow: hidden;
+
+  &__scan {
+    position: absolute;
+    top: $space-md;
+    right: $space-md;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-family: $font-mono;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: $accent-emerald;
+    background: transparent;
+    border: 1px solid rgba(52, 211, 153, 0.3);
+    padding: 4px 10px;
+    border-radius: $radius-full;
+    cursor: pointer;
+    transition: all 0.3s $ease-jarvis;
+    z-index: 5;
+
+    &:hover {
+      background: rgba(52, 211, 153, 0.1);
+      box-shadow: $shadow-emerald;
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+  }
+
+  &__value {
+    font-size: 36px;
+    font-weight: 300;
+    color: $text-primary;
+    margin-bottom: $space-xl;
+    letter-spacing: -0.02em;
+    animation: countFlash 1.5s ease forwards;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: $space-md;
+    margin-bottom: $space-lg;
+  }
+
+  &__col {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  &__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    margin-bottom: 2px;
+
+    &--gold { background: $accent-gold; box-shadow: 0 0 6px rgba(251, 191, 36, 0.4); }
+    &--cyan { background: $accent-cyan; box-shadow: 0 0 6px rgba(0, 209, 255, 0.4); }
+    &--emerald { background: $accent-emerald; box-shadow: 0 0 6px rgba(52, 211, 153, 0.4); }
+  }
+
+  &__col-label {
+    font-family: $font-mono;
+    font-size: 8px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    color: $text-dim;
+    text-transform: uppercase;
+  }
+
+  &__col-value {
+    font-size: 11px;
+    font-weight: 700;
+    color: $text-primary;
+  }
+}
+
+// ─── WAVEFORM ───────────────────────────────────────────────────
+.waveform {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 3px;
+  height: 36px;
+  margin-top: $space-sm;
+
+  &__bar {
+    width: 3px;
+    border-radius: 2px;
+    background: $accent-cyan;
+    transition: height 0.15s ease;
+    min-height: 4px;
+  }
+}

@@ -1,0 +1,205 @@
+.market-tab {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px;
+}
+
+.market-section {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.hud-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  font-family: 'Fira Code', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: #8A8F98;
+  text-transform: uppercase;
+}
+
+.market-live-dot {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  color: #34D399;
+}
+
+.live-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #34D399;
+  animation: pulse-dot 1.5s infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.4; transform: scale(0.7); }
+}
+
+// ─── Crypto Grid ─────────────────────────────────────────
+.market-crypto-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1px;
+  background: rgba(255,255,255,0.04);
+
+  @media (min-width: 768px) { grid-template-columns: repeat(4, 1fr); }
+}
+
+.market-crypto-card {
+  background: #050506;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  cursor: default;
+  transition: background 0.2s;
+  &:hover { background: rgba(0,209,255,0.03); }
+}
+
+.mc-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.mc-icon  { font-size: 18px; line-height: 1; }
+.mc-symbol { font-family: 'Fira Code', monospace; font-size: 13px; font-weight: 700; color: #EDEDEF; margin-top: 4px; }
+.mc-name  { font-size: 10px; color: #8A8F98; }
+.mc-price { font-family: 'Fira Code', monospace; font-size: 14px; font-weight: 600; color: #EDEDEF; }
+.mc-change {
+  font-family: 'Fira Code', monospace;
+  font-size: 11px;
+  &--up   { color: #34D399; }
+  &--down { color: #f87171; }
+}
+
+.spark-svg     { display: block; }
+.spark-placeholder { width: 80px; height: 28px; }
+
+// ─── Indices ─────────────────────────────────────────────
+.market-indices {
+  display: flex;
+  flex-direction: column;
+}
+
+.market-index-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  &:last-child { border-bottom: none; }
+}
+
+.mi-symbol { font-family: 'Fira Code', monospace; font-size: 12px; font-weight: 700; color: #EDEDEF; }
+.mi-name   { font-size: 10px; color: #8A8F98; margin-top: 2px; }
+.mi-right  { text-align: right; }
+.mi-price  { font-family: 'Fira Code', monospace; font-size: 13px; color: #EDEDEF; }
+.mi-change {
+  font-family: 'Fira Code', monospace;
+  font-size: 11px;
+  margin-top: 2px;
+  &--up   { color: #34D399; }
+  &--down { color: #f87171; }
+}
+
+.mono { font-family: 'Fira Code', monospace; }
+
+// ─── Fear & Greed ────────────────────────────────────────
+.fg-gauge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  width: 160px;
+}
+
+.fg-gauge__svg {
+  width: 160px;
+  height: auto;
+}
+
+.fg-label {
+  fill: #8A8F98;
+  font-size: 8px;
+  font-family: 'Fira Code', monospace;
+}
+
+.fg-value {
+  font-family: 'Fira Code', monospace;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.fg-label-main {
+  font-family: 'Fira Code', monospace;
+  font-size: 11px;
+  color: #8A8F98;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+// ─── News ────────────────────────────────────────────────
+.market-news {
+  display: flex;
+  flex-direction: column;
+}
+
+.market-news-item {
+  display: flex;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  align-items: flex-start;
+  cursor: default;
+  transition: background 0.2s;
+  &:last-child { border-bottom: none; }
+  &:hover { background: rgba(255,255,255,0.02); }
+}
+
+.mn-icon { font-size: 16px; flex-shrink: 0; margin-top: 2px; }
+.mn-content { flex: 1; min-width: 0; }
+
+.mn-title {
+  font-family: 'Fira Sans', sans-serif;
+  font-size: 12px;
+  color: #EDEDEF;
+  line-height: 1.5;
+}
+
+.mn-meta {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+  align-items: center;
+}
+
+.mn-tag {
+  font-family: 'Fira Code', monospace;
+  font-size: 9px;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: rgba(0,209,255,0.1);
+  color: #00D1FF;
+  letter-spacing: 0.08em;
+}
+
+.mn-ts {
+  font-family: 'Fira Code', monospace;
+  font-size: 10px;
+  color: #8A8F98;
+}
