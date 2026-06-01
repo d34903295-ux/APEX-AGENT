@@ -4,11 +4,10 @@
   position: fixed;
   inset: 0;
   display: flex;
-  align-items: center;
-  justify-content: center;
   background: $bg-void;
   z-index: 100;
   padding: $space-xl;
+  overflow-y: auto;
 }
 
 .connect-content {
@@ -19,6 +18,7 @@
   align-items: center;
   position: relative;
   z-index: 10;
+  margin: auto;
 }
 
 // ─── LOGO ───────────────────────────────────────────────────────

@@ -140,11 +140,15 @@ const ConnectScreen = ({ onConnect }) => {
         </div>
 
         <div className="connect-gateway-label" style={{ marginTop: 24 }}>AI GATEWAY (OpenRouter · OpenAI · Groq)</div>
-        <p className="connect-demo-hint">
-          Recomendamos usar una API de OpenRouter para mayor velocidad. Si dejas la API Key en blanco, el sistema descargará y utilizará <strong>WebLLM (IA Local)</strong> como respaldo (la descarga inicial puede tardar varios minutos y requerir espacio en caché).
+        <p style={{ fontSize: '11px', color: 'rgba(255,255,255,0.5)', marginTop: '4px', marginBottom: '4px', lineHeight: '1.3' }}>
+          * Si la API Key queda vacía, se iniciará <strong>WebLLM (IA Local)</strong> (tardará unos minutos la primera vez).
+          <br />
+          <a href="https://openrouter.ai/keys" target="_blank" rel="noreferrer" style={{ color: '#00D1FF', textDecoration: 'none', display: 'inline-block', marginTop: '4px' }}>
+            → Crear API Key en OpenRouter (Gratis)
+          </a>
         </p>
 
-        <div className="connect-input-wrap" style={{ marginTop: 10 }}>
+        <div className="connect-input-wrap" style={{ marginTop: 8 }}>
           <input type="text" value={aiUrl} onChange={e => setAiUrl(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && handleConnect()}
             placeholder="https://openrouter.ai/api/v1/chat/completions" className="connect-input"
