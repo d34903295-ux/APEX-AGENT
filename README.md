@@ -20,6 +20,32 @@ Utilizando el potente motor de **Claude AI**, APEX actúa como un "Copilot" fina
 - **Generación de Comprobantes:** Genera automáticamente facturas y comprobantes electrónicos interactivos (HTML) al finalizar una transacción.
 - **Interfaz Moderna y Futurista:** Basada en animaciones de `framer-motion`, estilos SCSS tipo Glassmorphism, monitoreo de precios (Market Pulse) y visualización de red en segundo plano (HUD).
 
+## 🦾 APEX-AGENT PRO — Backend Autónomo (Python)
+
+Este repo ahora incluye **[`apex-pro/`](apex-pro/README.md)**: el motor de
+inversión **autónomo, multi-activo (CeFi + DeFi)**, controlable por **Telegram**
+y desplegable en la nube. Es la evolución del copiloto React a un *agente que
+piensa, decide y ejecuta* 24/7 — con **seguridad primero** (arranca en paper
+trading, requiere confirmaciones explícitas para modos de riesgo extremo).
+
+- Arquitectura de microservicios sobre bus de eventos (Redis Pub/Sub, con
+  fallback en proceso): `data-feeder`, `strategy-engine`, `risk-manager`,
+  `execution-gateway`, `ai-brain`, `telegram-commander`, `dashboard`.
+- Estrategias hot-swap (grid dinámico, DCA, scalping, arbitraje, sniper+honeypot,
+  MEV backrun, NLP de noticias, on-chain, yield, Markowitz, planificador simbólico).
+- Gestión de riesgo (Kelly fraccional, caps duros, auto-pausa por régimen,
+  Monte Carlo) + backtesting y forward-test obligatorio antes de capital real.
+
+Quickstart (modo paper, sin infra):
+```bash
+cd apex-pro && pip install python-dotenv rich && python -m apex.main
+```
+Ver [`apex-pro/README.md`](apex-pro/README.md), [`apex-pro/docs/DEPLOYMENT.md`](apex-pro/docs/DEPLOYMENT.md)
+y [`apex-pro/docs/RISK_DISCLAIMER.md`](apex-pro/docs/RISK_DISCLAIMER.md).
+
+> ⚠️ Trading con apalancamiento puede causar **pérdida total** del capital. Úsalo
+> bajo tu entera responsabilidad. APEX implementa solo estrategias legítimas.
+
 ## 🛠️ Tecnologías Utilizadas
 - **Core Frontend:** React.js + Vite
 - **Estilos / UI:** SCSS, CSS Modules, Framer Motion (para animaciones fluidas)

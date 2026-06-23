@@ -1,0 +1,24 @@
+# secrets & local state
+.env
+*.key
+*.pem
+data/
+*.sqlite
+*.db
+audit.jsonl
+
+# python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+build/
+dist/
+
+# os/editor
+.DS_Store
+.idea/
+.vscode/
