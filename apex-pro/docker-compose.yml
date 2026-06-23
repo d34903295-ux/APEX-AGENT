@@ -59,6 +59,13 @@ services:
     command: python -m apex.services.execution_gateway
     depends_on: [redis]
 
+  feeds:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    command: python -m apex.data.feeds
+    depends_on: [redis]
+
   ai-brain:
     build: .
     restart: unless-stopped

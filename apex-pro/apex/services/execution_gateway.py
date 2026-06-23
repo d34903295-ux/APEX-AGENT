@@ -36,6 +36,6 @@ async def run(gw: ExecutionGateway | None = None) -> None:
     async def ticks():
         async for msg in bus.subscribe(Channels.TICKS):
             t = MarketTick.from_dict(msg)
-            gw.update_mark(t.symbol, t.price)
+            gw.update_mark(t.symbol, t.price, exchange=t.exchange)
 
     await asyncio.gather(orders(), ticks())

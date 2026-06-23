@@ -1,22 +1,27 @@
 """Execution gateway: the ONLY component that talks to exchanges/chains.
 
-Routing logic:
-  * If live trading is disabled (default) -> always PaperExecutor.
-  * If live + a CEX adapter exists for the venue -> ccxt order.
-  * If live + a DEX venue -> on-chain adapter (web3/jupiter) — stubbed.
+Routing (via the adapter layer in `apex/execution/adapters/`):
+  * live disabled (default)            -> PaperExecutor
+  * live + venue classified CEX        -> CCXTAdapter
+  * live + venue classified EVM DEX    -> EvmDexAdapter (scaffold)
+  * live + venue classified Solana DEX -> SolanaDexAdapter (scaffold)
 
-Smart routing picks the venue with the best effective price across the
-adapters that hold the required balance. Large orders are sliced by the algo
-named on the order (twap/vwap/iceberg).
+Smart routing: when an order doesn't pin a venue, `best_venue()` can pick the
+cheapest venue from the latest marks per exchange. Large orders are sliced by
+the algo named on the order (twap/vwap/iceberg).
 
-This module fails CLOSED: any uncertainty falls back to paper so the agent can
-never accidentally fire a live order it didn't fully understand.
+Fails CLOSED: any uncertainty falls back to paper (non-live) or drops the
+order with a log line (live) — it never silently invents a live fill.
 """
 from __future__ import annotations
 
 from apex.config import Settings, get_settings
 from apex.core.logging import get_logger
 from apex.core.models import Fill, Order
+from apex.execution.adapters.base import classify_venue
+from apex.execution.adapters.ccxt_adapter import CCXTAdapter
+from apex.execution.adapters.evm_dex import EvmDexAdapter
+from apex.execution.adapters.solana_dex import SolanaDexAdapter
 from apex.execution.algos import ALGOS
 from apex.execution.paper import PaperExecutor
 
@@ -27,38 +32,30 @@ class ExecutionGateway:
     def __init__(self, settings: Settings | None = None):
         self.s = settings or get_settings()
         self.paper = PaperExecutor()
-        self._ccxt: dict[str, object] = {}  # exchange -> ccxt client (lazy)
+        self.adapters = {
+            "cex": CCXTAdapter(self.s),
+            "evm_dex": EvmDexAdapter(self.s),
+            "solana_dex": SolanaDexAdapter(self.s),
+        }
+        # latest price per (exchange -> symbol -> price) for smart routing.
+        self._venue_marks: dict[str, dict[str, float]] = {}
 
-    def update_mark(self, symbol: str, price: float) -> None:
+    def update_mark(self, symbol: str, price: float, exchange: str = "paper") -> None:
         self.paper.update_mark(symbol, price)
+        self._venue_marks.setdefault(exchange, {})[symbol] = price
 
-    # ---- CEX adapter (lazy) --------------------------------------------
-    def _ccxt_client(self, exchange: str):
-        if exchange in self._ccxt:
-            return self._ccxt[exchange]
-        try:
-            import ccxt  # lazy import
-        except ImportError:
-            log.warning("ccxt not installed; %s falls back to paper", exchange)
-            self._ccxt[exchange] = None
+    def best_venue(self, symbol: str, side: str) -> str | None:
+        """Cheapest buy / richest sell across venues we have marks for."""
+        candidates = {ex: m[symbol] for ex, m in self._venue_marks.items()
+                      if symbol in m and ex != "paper"}
+        if not candidates:
             return None
-        creds = self.s.exchange_credentials(exchange)
-        if not creds.get("apiKey"):
-            self._ccxt[exchange] = None
-            return None
-        klass = getattr(ccxt, exchange, None)
-        if klass is None:
-            self._ccxt[exchange] = None
-            return None
-        client = klass({**creds, "enableRateLimit": True})
-        self._ccxt[exchange] = client
-        return client
+        return (min if side == "buy" else max)(candidates, key=candidates.get)
 
     # ---- execution ------------------------------------------------------
     def execute(self, order: Order) -> list[Fill]:
-        children = self._slice(order)
         fills: list[Fill] = []
-        for child in children:
+        for child in self._slice(order):
             fill = self._execute_one(child)
             if fill:
                 fills.append(fill)
@@ -69,33 +66,26 @@ class ExecutionGateway:
             algo = ALGOS[order.algo]
             try:
                 if order.algo == "vwap":
-                    curve = order.meta.get("volume_curve", [1] * 10)
-                    return list(algo(order, curve))
+                    return list(algo(order, order.meta.get("volume_curve", [1] * 10)))
                 return list(algo(order))
             except Exception as exc:  # pragma: no cover
                 log.warning("algo %s failed (%s); sending parent", order.algo, exc)
         return [order]
 
     def _execute_one(self, order: Order) -> Fill | None:
-        # FAIL CLOSED: anything other than confirmed-live CEX goes to paper.
+        # Non-live, or unspecified venue -> paper (the safe path).
         if not self.s.is_live or order.exchange in ("paper", ""):
             return self.paper.execute(order)
 
-        client = self._ccxt_client(order.exchange)
-        if client is None:
-            log.info("no live adapter for %s; paper fill", order.exchange)
+        venue_type = classify_venue(order.exchange)
+        adapter = self.adapters.get(venue_type)
+        if adapter is None:
+            log.info("no adapter for venue %s (%s); paper fill", order.exchange, venue_type)
             return self.paper.execute(order)
 
-        try:  # pragma: no cover - requires live keys
-            resp = client.create_order(
-                order.symbol, order.type.value, order.side.value,
-                order.amount, order.price,
-            )
-            avg = float(resp.get("average") or resp.get("price") or order.price or 0)
-            fee = float((resp.get("fee") or {}).get("cost") or 0)
-            return Fill(order_id=order.id, symbol=order.symbol, side=order.side,
-                        amount=order.amount, price=avg, fee=fee,
-                        exchange=order.exchange, strategy=order.strategy)
-        except Exception as exc:  # pragma: no cover
-            log.error("LIVE order failed on %s: %s; NOT retrying as paper", order.exchange, exc)
-            return None
+        fill = adapter.execute(order)
+        if fill is None:
+            # Adapter declined. For LIVE we DROP (never fake a fill); log loudly.
+            log.error("live adapter %s declined order %s; dropping (fail-closed)",
+                      venue_type, order.id)
+        return fill

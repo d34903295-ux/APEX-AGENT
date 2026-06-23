@@ -18,13 +18,18 @@
 - ✅ Persistence: TimescaleDB schema + JSONL fallback
 - ✅ Docker Compose stack, docs, tests (18+ passing), CI
 
-## Phase 1 — Real connectivity 🟡
-- ⬜ ccxt.pro websockets for low-latency L2 order books (replace REST poll)
-- ⬜ Wire honeypot screener to RPC sell-simulation + GoPlus/Honeypot.is
-- ⬜ DEX execution adapters: Uniswap (web3.py) + Jupiter (solana.py)
+## Phase 1 — Real connectivity 🟡 (in progress)
+- ✅ ccxt.pro L2 order-book websocket source (`data/sources/orderbook_ws.py`),
+      auto-preferred when keys exist; feeds scalping real OBI
+- ✅ Execution **adapter layer** (`execution/adapters/`) + smart routing
+      (`best_venue`) + fail-closed gateway refactor
+- ✅ Honeypot screener wired to free **GoPlus** API (pure parser + tests)
+- ✅ **DefiLlama** yields feed (`data/sources/defi_yields.py` + `data/feeds.py`)
+- 🟡 DEX execution adapters: EVM (web3.py) + Solana/Jupiter — structured
+      scaffolds, inert until RPC + hot-wallet wired (safety steps documented)
 - ⬜ Real sentiment crawlers (X/Twitter, Telegram callers, Reddit) → NEWS
 - ⬜ On-chain feeds: exchange netflows, CVD, perp OI/funding aggregator
-- ⬜ DeFi yields feed (DefiLlama) for the yield strategy
+- ⬜ New-pool detector (mempool/subgraph) feeding the sniper
 
 ## Phase 2 — Intelligence ⬜
 - ⬜ Feature store + XGBoost/LSTM/Transformer predictors behind `Predictor`
