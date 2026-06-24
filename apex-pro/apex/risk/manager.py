@@ -16,6 +16,7 @@ from apex.config import Settings, get_settings
 from apex.core.logging import get_logger
 from apex.core.models import Fill, Order, OrderType, Signal
 from apex.core.portfolio import Portfolio
+from apex.risk.correlation import CorrelationTracker
 from apex.risk.kelly import sized_position_pct
 from apex.risk.regime import Regime, RegimeDetector
 
@@ -31,6 +32,7 @@ class RiskManager:
             base_currency=self.s.base_currency, cash=self.s.paper_balance
         )
         self.regime = RegimeDetector()
+        self.correlation = CorrelationTracker()
         self.paused = False
         self.pause_reason = ""
         self._day_start_equity = self.pf.total_equity()
@@ -42,6 +44,7 @@ class RiskManager:
     def on_tick_price(self, symbol: str, price: float) -> list[str]:
         """Update marks + regime. Returns risk-event messages to broadcast."""
         self.pf.mark(symbol, price)
+        self.correlation.update(symbol, price)
         events: list[str] = []
         regime = self.regime.update(symbol, price)
         if regime is Regime.ABNORMAL and not self.paused:
@@ -105,6 +108,21 @@ class RiskManager:
         current = self.pf.exposure_pct(signal.symbol)
         if current + size_pct > self.limits.max_position_pct * 1.5:
             return None, f"exposure cap on {signal.symbol}"
+
+        # Correlated-cluster exposure: a new position plus everything it's
+        # highly correlated with must stay under the correlation cap.
+        correlated = self.correlation.correlated_symbols(
+            signal.symbol, list(self.pf.positions)
+        )
+        cluster_exposure = current + size_pct + sum(
+            self.pf.exposure_pct(c) for c in correlated
+        )
+        if cluster_exposure > self.limits.max_correlated_exposure_pct:
+            return None, (
+                f"correlated exposure {cluster_exposure:.0%} > cap "
+                f"{self.limits.max_correlated_exposure_pct:.0%} "
+                f"(cluster: {[signal.symbol, *correlated]})"
+            )
 
         price = signal.price_hint or self.pf._marks.get(signal.symbol)
         if not price or price <= 0:

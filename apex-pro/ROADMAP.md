@@ -35,11 +35,19 @@
       (sniper screens each via GoPlus before any buy)
 - ⬜ True on-chain stablecoin netflow (needs a data provider/API)
 
-## Phase 2 — Intelligence ⬜
-- ⬜ Feature store + XGBoost/LSTM/Transformer predictors behind `Predictor`
-- ⬜ Real AutoML weekly model selection with walk-forward validation
+## Phase 2 — Intelligence 🟡 (in progress)
+- ✅ Feature engineering (`ai/features.py`): scale-free multi-horizon features +
+      forward-return labels, no train/serve skew
+- ✅ Trainable predictor behind `Predictor` (`ai/models.py`: GradientBoosting/
+      XGBoost) with momentum fallback; LSTM/Transformer drop-in ready
+- ✅ Real AutoML with **walk-forward** out-of-sample selection (`ai/automl.py`),
+      wired into the ai-brain service (periodic retrain + select)
+- ✅ Correlation exposure model (`risk/correlation.py`) wired into risk-manager
+      (caps co-moving clusters; inverse-correlated hedges not penalised)
 - ⬜ LLM-assisted symbolic planner proposing sandboxed rules from regime
-- ⬜ Correlation/sector exposure model feeding the risk-manager
+      (needs ANTHROPIC_API_KEY)
+- ⬜ Sector/category exposure map (static taxonomy) on top of correlation
+- ⬜ torch LSTM/Transformer predictor implementation (GPU optional)
 
 ## Phase 3 — Scale & ops ⬜
 - ⬜ gRPC for hot-path service calls alongside Pub/Sub (per spec)

@@ -58,11 +58,14 @@ async def main() -> None:
     else:
         log.info("[green]Running in PAPER mode — no real funds at risk[/green]")
 
+    from apex.ai import brain
+
     tasks = [
         feeder.run(symbols),
         engine.run(),
         risk_manager.run(rm),
         execution_gateway.run(gw),
+        brain.run(symbols),
         _heartbeat(rm),
     ]
 
