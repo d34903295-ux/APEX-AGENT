@@ -64,6 +64,21 @@ BINANCE_API_SECRET=...
 Then `docker compose up -d` to recreate with new env. Confirm in Telegram with
 `/status` that `live=true`, and keep `/pause` one tap away.
 
+### Observability (Prometheus + Grafana) — opt-in
+
+The dashboard exposes `/metrics` (Prometheus text format): ticks, signals,
+orders, fills (by strategy/side), rejections, auto-pauses, equity, cash,
+drawdown, open positions, paused flag.
+
+```bash
+docker compose --profile observability up -d   # adds prometheus + grafana
+# Prometheus: http://localhost:9090   Grafana: http://localhost:3000 (anon enabled)
+```
+
+Grafana ships with anonymous viewing on; add the Prometheus datasource
+(`http://prometheus:9090`) and build panels on the `apex_*` metrics. Scrape
+config: `deploy/prometheus.yml`.
+
 ### Security hardening
 
 - Run on a dedicated user; firewall everything except SSH (and 8000 if you

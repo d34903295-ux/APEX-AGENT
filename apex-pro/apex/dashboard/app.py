@@ -63,13 +63,17 @@ def create_app():
 
     @app.on_event("startup")
     async def _startup():
+        from apex.obs.collector import collect
         app.state.task = asyncio.create_task(_consume())
+        app.state.metrics_task = asyncio.create_task(collect())
 
     @app.on_event("shutdown")
     async def _shutdown():
-        app.state.task.cancel()
-        with contextlib.suppress(asyncio.CancelledError):
-            await app.state.task
+        for t in (app.state.task, getattr(app.state, "metrics_task", None)):
+            if t:
+                t.cancel()
+                with contextlib.suppress(asyncio.CancelledError):
+                    await t
 
     @app.get("/", response_class=HTMLResponse)
     async def index():
@@ -78,6 +82,13 @@ def create_app():
     @app.get("/api/state")
     async def state():
         return JSONResponse(_STATE)
+
+    @app.get("/metrics")
+    async def metrics():
+        from apex.obs.metrics import REGISTRY
+        from fastapi.responses import PlainTextResponse
+        return PlainTextResponse(REGISTRY.render(),
+                                 media_type="text/plain; version=0.0.4")
 
     @app.get("/health")
     async def health():

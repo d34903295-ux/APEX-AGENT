@@ -53,12 +53,17 @@
 - ⬜ Sector/category exposure map (static taxonomy) on top of correlation
 - ⬜ torch LSTM/Transformer predictor implementation (GPU optional)
 
-## Phase 3 — Scale & ops ⬜
+## Phase 3 — Scale & ops 🟡 (in progress)
+- ✅ Prometheus-compatible `/metrics` (`apex/obs/metrics.py`, no deps) + bus-driven
+      collector (`apex/obs/collector.py`); Prometheus+Grafana opt-in compose
+      profile (`deploy/prometheus.yml`)
+- ✅ Auto-recovery retry/backoff utility (`apex/obs/retry.py`, sync + async)
+- ⬜ Wire retry into all live adapters/sources + multi-exchange failover
+      (auto-migrate pair on venue outage)
+- ⬜ Grafana dashboard JSON (pre-built panels) + alert rules
 - ⬜ gRPC for hot-path service calls alongside Pub/Sub (per spec)
 - ⬜ Multichain bridge router (cheapest-chain fund movement)
-- ⬜ Prometheus/Grafana metrics + alerting; structured tracing
 - ⬜ Backtest data lake + automated nightly strategy re-validation
-- ⬜ Multi-exchange failover (auto-migrate pair on venue outage)
 
 ## Phase 4 — Advanced (gated, high-risk) ⬜
 - ⬜ Perp leverage execution with dynamic hedging (degen profile)

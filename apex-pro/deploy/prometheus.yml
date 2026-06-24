@@ -1,0 +1,11 @@
+# Prometheus scrape config for APEX-AGENT PRO.
+# The dashboard service exposes /metrics (text exposition format).
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: apex-agent
+    metrics_path: /metrics
+    static_configs:
+      - targets: ["dashboard:8000"]
