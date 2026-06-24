@@ -127,6 +127,61 @@ async def run_bot(rm=None) -> None:
         await bus.publish(Channels.COMMANDS, {"action": action, "name": args[1]})
         await update.message.reply_text(f"🔧 {action} {args[1]} requested.")
 
+    def _store():
+        from apex.strategies.store import StrategyConfigStore
+        import os
+        return StrategyConfigStore(
+            os.getenv("APEX_STRATEGY_CONFIG", "./data/strategy_config.json")).load()
+
+    async def strategies(update, ctx):
+        if not guard(update):
+            return
+        from apex.strategies import available_strategies
+        store = _store()
+        enabled = store.enabled()
+        lines = [f"📦 *Symbols:* {', '.join(store.symbols)}", "", "*Strategies:*"]
+        for name in available_strategies():
+            mark = "🟢" if name in enabled else "⚪"
+            p = store.params(name)
+            lines.append(f"{mark} `{name}`" + (f" {p}" if p else ""))
+        lines.append("\nToggle: `/set_strategy on|off <name>`")
+        lines.append("Tune: `/set_param <name> <key> <value>`")
+        await update.message.reply_text("\n".join(lines), parse_mode="Markdown")
+
+    async def set_param(update, ctx):
+        if not guard(update):
+            return
+        if len(ctx.args) < 3:
+            await update.message.reply_text(
+                "Usage: /set_param <strategy> <key> <value>\n"
+                "e.g. `/set_param grid levels 8`", parse_mode="Markdown")
+            return
+        name, key, value = ctx.args[0], ctx.args[1], " ".join(ctx.args[2:])
+        await bus.publish(Channels.COMMANDS,
+                          {"action": "set_param", "name": name, "key": key, "value": value})
+        await update.message.reply_text(f"🔧 set {name}.{key} = {value} (requested).")
+
+    async def params(update, ctx):
+        if not guard(update):
+            return
+        if not ctx.args:
+            await update.message.reply_text("Usage: /params <strategy>")
+            return
+        p = _store().params(ctx.args[0])
+        await update.message.reply_text(
+            f"⚙️ `{ctx.args[0]}` params: {p or 'defaults'}", parse_mode="Markdown")
+
+    async def symbols(update, ctx):
+        if not guard(update):
+            return
+        if not ctx.args:
+            await update.message.reply_text(f"📦 Symbols: {', '.join(_store().symbols)}\n"
+                                            "Set: /symbols BTC/USDT ETH/USDT")
+            return
+        syms = [a.upper() for a in ctx.args]
+        await bus.publish(Channels.COMMANDS, {"action": "set_symbols", "symbols": syms})
+        await update.message.reply_text(f"📦 symbols -> {', '.join(syms)} (requested).")
+
     async def two_fa(update, ctx):
         if not guard(update):
             return
@@ -202,6 +257,8 @@ async def run_bot(rm=None) -> None:
         ("start", start), ("status", status), ("balance", balance),
         ("performance", performance), ("pause", pause), ("resume", resume),
         ("set_strategy", set_strategy), ("risk_profile", risk_profile),
+        ("strategies", strategies), ("set_param", set_param), ("params", params),
+        ("symbols", symbols),
         ("force_trade", force_trade), ("withdraw", withdraw),
         ("deposit_address", deposit_address), ("log", show_log), ("2fa", two_fa),
     ]:

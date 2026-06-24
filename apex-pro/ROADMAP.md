@@ -16,7 +16,11 @@
 - ✅ Telegram commander (whitelist + TOTP 2FA + degen confirmation)
 - ✅ FastAPI + Plotly dashboard
 - ✅ Persistence: TimescaleDB schema + JSONL fallback
-- ✅ Docker Compose stack, docs, tests (18+ passing), CI
+- ✅ Docker Compose stack, docs, tests, CI
+- ✅ **User-configurable strategy** (no code): risk-profile rosters +
+      persistent JSON config (`data/strategy_config.json`) + live Telegram
+      control (`/strategies`, `/set_param`, `/params`, `/symbols`). See
+      `docs/CONFIGURATION.md`.
 
 ## Phase 1 — Real connectivity 🟡 (in progress)
 - ✅ ccxt.pro L2 order-book websocket source (`data/sources/orderbook_ws.py`),

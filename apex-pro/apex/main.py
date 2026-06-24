@@ -11,6 +11,7 @@ docker-compose.yml) — they communicate over Redis instead.
 from __future__ import annotations
 
 import asyncio
+import os
 
 from apex.bus.events import Channels
 from apex.bus.redis_bus import make_bus
@@ -22,6 +23,7 @@ from apex.execution.gateway import ExecutionGateway
 from apex.risk.manager import RiskManager
 from apex.services import execution_gateway, risk_manager
 from apex.strategies.engine import StrategyEngine
+from apex.strategies.store import PROFILE_ROSTERS, StrategyConfigStore
 
 log = get_logger("apex.main")
 BANNER = r"""
@@ -50,7 +52,10 @@ async def main() -> None:
     # Shared stateful components (single source of truth in-process).
     rm = RiskManager(settings=s)
     gw = ExecutionGateway(settings=s)
-    engine = StrategyEngine(symbols)
+    store = StrategyConfigStore(
+        os.getenv("APEX_STRATEGY_CONFIG", "./data/strategy_config.json")
+    ).load(default_roster=PROFILE_ROSTERS.get(s.risk_profile.value))
+    engine = StrategyEngine(symbols, store=store)
 
     log.info(BANNER, s.mode.value, s.risk_profile.value, s.is_live, list(engine.strategies))
     if s.is_live:

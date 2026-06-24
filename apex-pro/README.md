@@ -131,6 +131,7 @@ See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the full design.
 
 ## Documentation
 
+- [`docs/CONFIGURATION.md`](docs/CONFIGURATION.md) — **configure your strategy without code** (risk profile, JSON file, or live via Telegram).
 - [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md) — step-by-step VPS deploy.
 - [`docs/TELEGRAM_BOTFATHER.md`](docs/TELEGRAM_BOTFATHER.md) — BotFather setup + system prompt + command list.
 - [`docs/TESTING.md`](docs/TESTING.md) — the "don't self-destruct" validation strategy.

@@ -29,6 +29,10 @@ performance - Realised PnL, fees, drawdown
 pause - Halt all trading immediately
 resume - Resume trading
 set_strategy - Enable/disable a strategy live: /set_strategy on|off <name>
+strategies - List all strategies, which are on, and their params
+set_param - Tune a strategy param live: /set_param <name> <key> <value>
+params - Show a strategy's current params: /params <name>
+symbols - Show or set traded symbols: /symbols [BTC/USDT ETH/USDT ...]
 risk_profile - Set risk: conservative|balanced|aggressive|degen
 force_trade - Manual override (needs 2FA): /force_trade buy|sell SYM pct
 withdraw - Withdrawal intent (needs 2FA + allow-list)
