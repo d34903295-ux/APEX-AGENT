@@ -2,7 +2,7 @@
 .env
 *.key
 *.pem
-data/
+/data/
 *.sqlite
 *.db
 audit.jsonl
