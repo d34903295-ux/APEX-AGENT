@@ -28,8 +28,12 @@
 - 🟡 DEX execution adapters: EVM (web3.py) + Solana/Jupiter — structured
       scaffolds, inert until RPC + hot-wallet wired (safety steps documented)
 - ⬜ Real sentiment crawlers (X/Twitter, Telegram callers, Reddit) → NEWS
-- ⬜ On-chain feeds: exchange netflows, CVD, perp OI/funding aggregator
-- ⬜ New-pool detector (mempool/subgraph) feeding the sniper
+      (needs API tokens — pending user secrets)
+- ✅ Derivatives/flow feed from **public** Binance Futures (funding rate, open
+      interest, CVD from aggTrades) → 'onchain' items, no key required
+- ✅ New-pool detector via **public** DexScreener API → 'new_pool' items
+      (sniper screens each via GoPlus before any buy)
+- ⬜ True on-chain stablecoin netflow (needs a data provider/API)
 
 ## Phase 2 — Intelligence ⬜
 - ⬜ Feature store + XGBoost/LSTM/Transformer predictors behind `Predictor`
