@@ -8,10 +8,8 @@ Pure parser (`parse_dexscreener_profiles`) is unit-testable without network.
 """
 from __future__ import annotations
 
-import json
-import urllib.request
-
 from apex.core.logging import get_logger
+from apex.obs.http import get_json
 
 log = get_logger("apex.data.newpools")
 
@@ -50,8 +48,7 @@ def parse_dexscreener_profiles(payload, *, chains: set[str] | None = None) -> li
 
 def fetch_new_pools(*, chains: set[str] | None = None, timeout: float = 6.0) -> list[dict]:
     try:  # pragma: no cover - network
-        with urllib.request.urlopen(PROFILES_URL, timeout=timeout) as r:
-            payload = json.loads(r.read().decode())
+        payload = get_json(PROFILES_URL, timeout=timeout)
         return parse_dexscreener_profiles(payload, chains=chains)
     except Exception as exc:
         log.warning("DexScreener fetch failed: %s", exc)

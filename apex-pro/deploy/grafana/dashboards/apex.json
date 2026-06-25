@@ -1,0 +1,57 @@
+{
+  "annotations": { "list": [] },
+  "editable": true,
+  "title": "APEX-AGENT PRO",
+  "tags": ["apex"],
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "refresh": "10s",
+  "time": { "from": "now-1h", "to": "now" },
+  "panels": [
+    {
+      "type": "stat", "title": "Equity",
+      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 0 },
+      "targets": [{ "expr": "apex_equity" }]
+    },
+    {
+      "type": "stat", "title": "Drawdown",
+      "gridPos": { "h": 4, "w": 6, "x": 6, "y": 0 },
+      "fieldConfig": { "defaults": { "unit": "percentunit" } },
+      "targets": [{ "expr": "apex_drawdown_ratio" }]
+    },
+    {
+      "type": "stat", "title": "Open positions",
+      "gridPos": { "h": 4, "w": 6, "x": 12, "y": 0 },
+      "targets": [{ "expr": "apex_open_positions" }]
+    },
+    {
+      "type": "stat", "title": "Paused",
+      "gridPos": { "h": 4, "w": 6, "x": 18, "y": 0 },
+      "targets": [{ "expr": "apex_paused" }]
+    },
+    {
+      "type": "timeseries", "title": "Equity over time",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 4 },
+      "targets": [{ "expr": "apex_equity" }]
+    },
+    {
+      "type": "timeseries", "title": "Fills/min by strategy",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 4 },
+      "targets": [{ "expr": "sum by (strategy) (rate(apex_fills_total[5m])) * 60", "legendFormat": "{{strategy}}" }]
+    },
+    {
+      "type": "timeseries", "title": "Signals vs Orders vs Rejections (rate/min)",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 12 },
+      "targets": [
+        { "expr": "sum(rate(apex_signals_total[5m]))*60", "legendFormat": "signals" },
+        { "expr": "rate(apex_orders_total[5m])*60", "legendFormat": "orders" },
+        { "expr": "sum(rate(apex_rejections_total[5m]))*60", "legendFormat": "rejections" }
+      ]
+    },
+    {
+      "type": "timeseries", "title": "Risk auto-pauses (total)",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 12 },
+      "targets": [{ "expr": "apex_pauses_total" }]
+    }
+  ]
+}

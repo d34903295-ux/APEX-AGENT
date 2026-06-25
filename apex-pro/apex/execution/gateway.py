@@ -23,6 +23,7 @@ from apex.execution.adapters.ccxt_adapter import CCXTAdapter
 from apex.execution.adapters.evm_dex import EvmDexAdapter
 from apex.execution.adapters.solana_dex import SolanaDexAdapter
 from apex.execution.algos import ALGOS
+from apex.execution.circuit import VenueFailover
 from apex.execution.paper import PaperExecutor
 
 log = get_logger("apex.exec.gateway")
@@ -39,6 +40,7 @@ class ExecutionGateway:
         }
         # latest price per (exchange -> symbol -> price) for smart routing.
         self._venue_marks: dict[str, dict[str, float]] = {}
+        self.failover = VenueFailover()
 
     def update_mark(self, symbol: str, price: float, exchange: str = "paper") -> None:
         self.paper.update_mark(symbol, price)
@@ -72,6 +74,14 @@ class ExecutionGateway:
                 log.warning("algo %s failed (%s); sending parent", order.algo, exc)
         return [order]
 
+    def _alternates(self, symbol: str, primary: str) -> list[str]:
+        """Other CEX venues we have live marks for, ordered by venue name."""
+        same_type = classify_venue(primary)
+        return sorted(
+            ex for ex in self._venue_marks
+            if ex not in ("paper", primary) and classify_venue(ex) == same_type
+        )
+
     def _execute_one(self, order: Order) -> Fill | None:
         # Non-live, or unspecified venue -> paper (the safe path).
         if not self.s.is_live or order.exchange in ("paper", ""):
@@ -83,9 +93,26 @@ class ExecutionGateway:
             log.info("no adapter for venue %s (%s); paper fill", order.exchange, venue_type)
             return self.paper.execute(order)
 
-        fill = adapter.execute(order)
-        if fill is None:
-            # Adapter declined. For LIVE we DROP (never fake a fill); log loudly.
-            log.error("live adapter %s declined order %s; dropping (fail-closed)",
-                      venue_type, order.id)
-        return fill
+        # Multi-exchange failover: try the primary, then any healthy alternate
+        # that lists the same pair, migrating on venue outage. Circuit breakers
+        # skip venues that are currently failing.
+        candidates = self.failover.candidates(order.exchange, self._alternates(order.symbol, order.exchange))
+        for venue in candidates:
+            child = order if venue == order.exchange else Order.from_dict({**order.to_dict(), "exchange": venue})
+            try:
+                fill = self.adapters[classify_venue(venue)].execute(child)
+            except Exception as exc:  # pragma: no cover - adapter raised
+                log.warning("venue %s raised (%s); failing over", venue, exc)
+                self.failover.record_failure(venue)
+                continue
+            if fill is not None:
+                self.failover.record_success(venue)
+                if venue != order.exchange:
+                    log.warning("order %s migrated %s -> %s (failover)", order.id, order.exchange, venue)
+                return fill
+            self.failover.record_failure(venue)
+
+        # All venues exhausted. For LIVE we DROP (never fake a fill); log loudly.
+        log.error("all venues failed for order %s (%s); dropping (fail-closed)",
+                  order.id, candidates)
+        return None

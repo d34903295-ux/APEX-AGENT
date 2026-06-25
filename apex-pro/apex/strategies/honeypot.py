@@ -7,11 +7,10 @@ FAILS CLOSED — any error or unknown == unsafe.
 """
 from __future__ import annotations
 
-import json
-import urllib.request
 from dataclasses import dataclass, field
 
 from apex.core.logging import get_logger
+from apex.obs.http import get_json
 
 log = get_logger("apex.honeypot")
 
@@ -122,9 +121,8 @@ def screen_token(token: str, chain: str = "ethereum", *,
         return r
     url = (f"https://api.gopluslabs.io/api/v1/token_security/{chain_id}"
            f"?contract_addresses={token}")
-    try:
-        with urllib.request.urlopen(url, timeout=timeout) as resp:  # pragma: no cover - network
-            payload = json.loads(resp.read().decode())
+    try:  # pragma: no cover - network
+        payload = get_json(url, timeout=timeout)
         return parse_goplus(payload, token, chain,
                             min_liquidity_usd=min_liquidity_usd, max_tax=max_tax)
     except Exception as exc:

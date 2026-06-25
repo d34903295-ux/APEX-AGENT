@@ -75,9 +75,10 @@ docker compose --profile observability up -d   # adds prometheus + grafana
 # Prometheus: http://localhost:9090   Grafana: http://localhost:3000 (anon enabled)
 ```
 
-Grafana ships with anonymous viewing on; add the Prometheus datasource
-(`http://prometheus:9090`) and build panels on the `apex_*` metrics. Scrape
-config: `deploy/prometheus.yml`.
+Grafana **auto-provisions** the Prometheus datasource and a pre-built
+"APEX-AGENT PRO" dashboard (equity, drawdown, fills/min by strategy, signals vs
+orders vs rejections, auto-pauses) from `deploy/grafana/`. Anonymous viewing is
+on. Scrape config: `deploy/prometheus.yml`.
 
 ### Security hardening
 

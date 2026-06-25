@@ -57,10 +57,14 @@
 - ✅ Prometheus-compatible `/metrics` (`apex/obs/metrics.py`, no deps) + bus-driven
       collector (`apex/obs/collector.py`); Prometheus+Grafana opt-in compose
       profile (`deploy/prometheus.yml`)
-- ✅ Auto-recovery retry/backoff utility (`apex/obs/retry.py`, sync + async)
-- ⬜ Wire retry into all live adapters/sources + multi-exchange failover
-      (auto-migrate pair on venue outage)
-- ⬜ Grafana dashboard JSON (pre-built panels) + alert rules
+- ✅ Auto-recovery retry/backoff utility (`apex/obs/retry.py`, sync + async) +
+      resilient HTTP (`apex/obs/http.py`) wired into ALL public sources (GoPlus,
+      DefiLlama, DexScreener, Binance public)
+- ✅ Multi-exchange failover (`apex/execution/circuit.py`): per-venue circuit
+      breakers + auto-migrate the pair to a healthy venue on outage (fail-closed)
+- ✅ Grafana dashboard JSON (pre-built panels) auto-provisioned + Prometheus
+      datasource (`deploy/grafana/`)
+- ⬜ Alert rules (Prometheus/Grafana) for drawdown/pause/no-fills
 - ⬜ gRPC for hot-path service calls alongside Pub/Sub (per spec)
 - ⬜ Multichain bridge router (cheapest-chain fund movement)
 - ⬜ Backtest data lake + automated nightly strategy re-validation

@@ -6,11 +6,10 @@ Pure parsing (`parse_llama_pools`) is testable without network.
 """
 from __future__ import annotations
 
-import json
-import urllib.request
 from collections import defaultdict
 
 from apex.core.logging import get_logger
+from apex.obs.http import get_json
 
 log = get_logger("apex.data.yields")
 
@@ -51,9 +50,8 @@ def parse_llama_pools(payload: dict, *, min_tvl: float = 5_000_000,
 
 
 def fetch_yields(timeout: float = 8.0) -> dict[str, list[dict]]:
-    try:
-        with urllib.request.urlopen("https://yields.llama.fi/pools", timeout=timeout) as r:  # pragma: no cover
-            payload = json.loads(r.read().decode())
+    try:  # pragma: no cover - network
+        payload = get_json("https://yields.llama.fi/pools", timeout=timeout)
         return parse_llama_pools(payload)
     except Exception as exc:
         log.warning("DefiLlama fetch failed: %s", exc)
