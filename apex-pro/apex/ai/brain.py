@@ -43,6 +43,12 @@ async def run(symbols: list[str], interval: float = 5.0, retrain_every: int = 60
             if len(prices[t.symbol]) > 5000:
                 prices[t.symbol] = prices[t.symbol][-3000:]
 
+    from apex.ai.llm_planner import LLMRuleProposer
+    proposer = LLMRuleProposer()
+    if proposer.available:
+        log.info("LLM rule proposer ENABLED (model=%s)", proposer.model)
+    last_facts: dict = {}
+
     async def emit():
         cycle = 0
         while True:
@@ -55,11 +61,18 @@ async def run(symbols: list[str], interval: float = 5.0, retrain_every: int = 60
                 if len(hist) >= MIN_TRAIN and (cycle % retrain_every == 1):
                     automl.select(hist)
                 pred = automl.active.predict(sym, s)
-                facts = {sym: {"price": s.values[-1] if s.values else 0,
-                               "pred_direction": pred["direction"],
-                               "pred_confidence": pred["confidence"]}}
+                fact = {"price": s.values[-1] if s.values else 0,
+                        "pred_direction": pred["direction"],
+                        "pred_confidence": pred["confidence"]}
+                last_facts[sym] = fact
                 await bus.publish(Channels.PREDICTIONS, {
-                    "symbol": sym, "model": automl.active.name, **pred, "facts": facts,
+                    "symbol": sym, "model": automl.active.name, **pred,
+                    "facts": {sym: fact},
                 })
+            # LLM-assisted creativity: occasionally propose sandboxed rules.
+            if proposer.available and last_facts and cycle % retrain_every == 0:
+                for rule in proposer.propose(dict(last_facts)):
+                    await bus.publish(Channels.COMMANDS,
+                                      {"action": "add_planner_rule", "rule": rule})
 
     await asyncio.gather(ingest(), emit())

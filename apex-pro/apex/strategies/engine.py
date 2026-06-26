@@ -121,6 +121,14 @@ class StrategyEngine:
             # rebuild all live strategies on the new symbol set
             for name in list(self.strategies):
                 self._instantiate(name, self.store.params(name))
+        elif action == "add_planner_rule":
+            planner = self.strategies.get("planner")
+            if planner is not None and hasattr(planner, "add_rule"):
+                try:
+                    planner.add_rule(cmd["rule"])
+                    log.info("planner rule added: %s", cmd["rule"].get("name"))
+                except Exception as exc:  # pragma: no cover
+                    log.warning("bad planner rule rejected: %s", exc)
 
 
 async def run(symbols: list[str] | None = None, enabled: list[str] | None = None) -> None:

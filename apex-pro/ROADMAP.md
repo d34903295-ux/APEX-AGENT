@@ -48,8 +48,10 @@
       wired into the ai-brain service (periodic retrain + select)
 - ✅ Correlation exposure model (`risk/correlation.py`) wired into risk-manager
       (caps co-moving clusters; inverse-correlated hedges not penalised)
-- ⬜ LLM-assisted symbolic planner proposing sandboxed rules from regime
-      (needs ANTHROPIC_API_KEY)
+- ✅ LLM-assisted symbolic planner (`ai/llm_planner.py`): proposes **sandboxed,
+      validated** rules from live facts; wired into ai-brain -> planner. Safe by
+      construction (data not code, leverage/size clamped, always sandboxed).
+      No-op without `ANTHROPIC_API_KEY` + `pip install anthropic`.
 - ⬜ Sector/category exposure map (static taxonomy) on top of correlation
 - ⬜ torch LSTM/Transformer predictor implementation (GPU optional)
 

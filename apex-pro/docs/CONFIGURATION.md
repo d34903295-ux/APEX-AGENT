@@ -56,6 +56,24 @@ each strategy in `apex/strategies/` for its tunables.
 All live changes are **persisted** back to the config file, so they survive a
 restart. Values are auto-typed (`8`→int, `0.004`→float, `true`→bool).
 
+## Optional: LLM-assisted strategy creativity
+
+Enable the `planner` strategy and provide an Anthropic key to let APEX *propose*
+its own micro-strategies from live market facts:
+
+```ini
+ANTHROPIC_API_KEY=sk-ant-...
+APEX_LLM_MODEL=claude-opus-4-8
+```
+```bash
+pip install anthropic
+```
+Then `/set_strategy on planner`. The ai-brain periodically asks the model for
+candidate rules. **Safety:** every proposed rule is validated (operators
+whitelisted, leverage/size clamped) and is **always sandboxed** — it must pass
+backtest + 24h paper before the risk-manager will fund it, and it can never use
+real capital while sandboxed. Without the key/package this is a silent no-op.
+
 ## How it flows
 `Telegram → COMMANDS bus → strategy-engine applies live + saves to JSON`.
 On boot the engine loads the same JSON, so the file and the live state are
