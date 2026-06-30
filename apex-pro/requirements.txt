@@ -1,0 +1,61 @@
+# ============================================================================
+# APEX-AGENT PRO — Python backend dependencies
+# ----------------------------------------------------------------------------
+# The CORE engine runs in paper/simulation mode with ONLY the "core" group.
+# Everything else is optional and lazily imported, so you can start small.
+# Install everything with:  pip install -r requirements.txt
+# Or just the core:         pip install python-dotenv rich
+# ============================================================================
+
+# --- core (always required) -------------------------------------------------
+python-dotenv>=1.0.0
+rich>=13.7.0
+
+# --- market data / exchanges (CEX) ------------------------------------------
+ccxt>=4.2.0
+
+# --- numerical / TA ---------------------------------------------------------
+numpy>=1.26.0
+pandas>=2.2.0
+scipy>=1.12.0
+# ta-lib is OPTIONAL and needs a C library. We ship a pure-python fallback.
+# pip install TA-Lib   (only after installing the system lib)
+
+# --- machine learning (ai-brain) -------------------------------------------
+scikit-learn>=1.4.0
+xgboost>=2.0.0
+# torch / tensorflow are heavy and GPU dependent. Install on demand:
+# pip install torch        # for LSTM/Transformers
+
+# --- messaging / cache ------------------------------------------------------
+redis>=5.0.0
+
+# --- telegram ---------------------------------------------------------------
+python-telegram-bot>=21.0
+
+# --- dashboard --------------------------------------------------------------
+fastapi>=0.110.0
+uvicorn[standard]>=0.29.0
+plotly>=5.20.0
+jinja2>=3.1.0
+
+# --- persistence ------------------------------------------------------------
+SQLAlchemy>=2.0.0
+psycopg2-binary>=2.9.0        # PostgreSQL / TimescaleDB driver
+
+# --- on-chain / DeFi (optional, install per-chain as needed) ----------------
+# web3>=6.15.0
+# solana>=0.34.0
+# solders>=0.21.0
+
+# --- nlp / sentiment (optional) --------------------------------------------
+# vaderSentiment>=3.3.2
+# tweepy>=4.14.0
+
+# --- LLM-assisted planner (optional) ---------------------------------------
+# Enables ai/llm_planner.py. Also set ANTHROPIC_API_KEY in .env. No-op without it.
+# anthropic>=0.40.0
+
+# --- dev / testing ----------------------------------------------------------
+pytest>=8.0.0
+pytest-asyncio>=0.23.0

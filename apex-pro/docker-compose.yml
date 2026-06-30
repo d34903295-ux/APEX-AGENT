@@ -1,0 +1,124 @@
+# ============================================================================
+# APEX-AGENT PRO — distributed microservice deployment.
+# Single-host quickstart instead?  ->  docker compose up redis db && \
+#                                       python -m apex.main
+# Full stack:  cp .env.example .env && docker compose up -d --build
+# ============================================================================
+services:
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    ports: ["6379:6379"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  db:
+    image: timescale/timescaledb:latest-pg16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: apex
+      POSTGRES_PASSWORD: apex
+      POSTGRES_DB: apex
+    ports: ["5432:5432"]
+    volumes:
+      - apex_db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U apex"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  data-feeder:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    command: python -m apex.services.data_feeder
+    depends_on: [redis]
+
+  strategy-engine:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    command: python -m apex.services.strategy_engine
+    depends_on: [redis]
+
+  risk-manager:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    command: python -m apex.services.risk_manager
+    depends_on: [redis]
+
+  execution-gateway:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    command: python -m apex.services.execution_gateway
+    depends_on: [redis]
+
+  feeds:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    command: python -m apex.data.feeds
+    depends_on: [redis]
+
+  council:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    command: python -m apex.services.council
+    depends_on: [redis]
+
+  ai-brain:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    command: python -m apex.services.ai_brain
+    depends_on: [redis]
+
+  telegram-commander:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    command: python -m apex.services.telegram_commander
+    depends_on: [redis]
+
+  dashboard:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    command: uvicorn apex.dashboard.app:app --host 0.0.0.0 --port 8000
+    ports: ["8000:8000"]
+    depends_on: [redis]
+
+  # --- Observability (opt-in): docker compose --profile observability up ----
+  prometheus:
+    image: prom/prometheus:latest
+    profiles: ["observability"]
+    restart: unless-stopped
+    volumes:
+      - ./deploy/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    ports: ["9090:9090"]
+    depends_on: [dashboard]
+
+  grafana:
+    image: grafana/grafana:latest
+    profiles: ["observability"]
+    restart: unless-stopped
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: apex
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+    ports: ["3000:3000"]
+    volumes:
+      - apex_grafana:/var/lib/grafana
+      - ./deploy/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./deploy/grafana/dashboards:/var/lib/grafana/dashboards:ro
+    depends_on: [prometheus]
+
+volumes:
+  apex_db:
+  apex_grafana:

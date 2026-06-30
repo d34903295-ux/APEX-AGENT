@@ -1,0 +1,16 @@
+{
+  "_comment": "Copy to data/strategy_config.json (or set APEX_STRATEGY_CONFIG). The agent auto-creates this from your risk profile on first run; edit it to taste. Every key under 'params' maps directly to a strategy constructor argument.",
+  "symbols": ["BTC/USDT", "ETH/USDT", "SOL/USDT"],
+  "strategies": {
+    "grid":      { "enabled": true,  "params": { "levels": 6, "base_spacing": 0.005, "per_level_pct": 0.02 } },
+    "dca":       { "enabled": true,  "params": { "slow": 100, "base_buy_pct": 0.01, "max_buy_pct": 0.05 } },
+    "scalping":  { "enabled": false, "params": { "obi_threshold": 0.25, "max_spread": 0.0015, "size_pct": 0.03 } },
+    "arbitrage": { "enabled": false, "params": { "min_edge": 0.0015 } },
+    "portfolio": { "enabled": false, "params": { "lookback": 100, "rebalance_every": 500 } },
+    "onchain":   { "enabled": false, "params": { "size_pct": 0.04 } },
+    "news":      { "enabled": false, "params": { "min_sentiment": 0.4 } },
+    "yield":     { "enabled": false, "params": { "min_apy": 0.04, "min_risk": 0.8 } },
+    "sniper":    { "enabled": false, "params": { "min_liquidity_usd": 25000, "max_tax": 0.10 } },
+    "planner":   { "enabled": false, "params": {} }
+  }
+}
