@@ -74,6 +74,23 @@ class RiskManager:
         self._day_start_equity = self.pf.total_equity()
         log.info("[green]RISK RESUME[/green]")
 
+    def set_profile(self, name: str) -> bool:
+        """Change the active risk profile at runtime (limits take effect on the
+        next evaluate()). Returns False for an unknown profile."""
+        from apex.config import RiskProfile
+
+        try:
+            profile = RiskProfile(name.lower())
+        except ValueError:
+            log.warning("unknown risk profile %r", name)
+            return False
+        self.profile = profile
+        self.limits = self.s.limits.for_profile(profile)
+        log.info("[cyan]risk profile -> %s[/cyan] (max_lev=%sx max_pos=%.0f%%)",
+                 profile.value, self.limits.max_portfolio_leverage,
+                 self.limits.max_position_pct * 100)
+        return True
+
     # ---- the gate -------------------------------------------------------
     def evaluate(self, signal: Signal) -> tuple[Order | None, str]:
         """Return (Order, reason) — Order is None when rejected."""

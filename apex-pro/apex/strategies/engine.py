@@ -90,19 +90,34 @@ class StrategyEngine:
         bus = await make_bus()
         log.info("Strategy-engine running: %s on %s", list(self.strategies), self.symbols)
 
-        async def pump(channel: str, method: str, decode):
+        loop = asyncio.get_event_loop()
+
+        async def pump(channel: str, method: str, decode, offload: bool = False):
             async for msg in bus.subscribe(channel):
-                payload = decode(msg)
-                for sig in self._collect(method, payload):
-                    await bus.publish(Channels.SIGNALS, sig.to_dict())
+                try:
+                    payload = decode(msg)
+                    # NEWS handlers may do blocking I/O (e.g. sniper honeypot
+                    # screen); run them off the event loop so one slow call can't
+                    # stall ticks/risk/heartbeat across the single-process deploy.
+                    if offload:
+                        signals = await loop.run_in_executor(None, self._collect, method, payload)
+                    else:
+                        signals = self._collect(method, payload)
+                    for sig in signals:
+                        await bus.publish(Channels.SIGNALS, sig.to_dict())
+                except Exception as exc:  # one bad message must not kill the sub
+                    log.warning("pump %s dropped a message: %s", channel, exc)
 
         async def commands():
             async for cmd in bus.subscribe(Channels.COMMANDS):
-                self._handle_command(cmd)
+                try:
+                    self._handle_command(cmd)
+                except Exception as exc:
+                    log.warning("command handler error: %s", exc)
 
         await asyncio.gather(
             pump(Channels.TICKS, "on_tick", MarketTick.from_dict),
-            pump(Channels.NEWS, "on_news", lambda m: m),
+            pump(Channels.NEWS, "on_news", lambda m: m, offload=True),
             pump(Channels.PREDICTIONS, "on_prediction", lambda m: m),
             commands(),
         )
@@ -123,12 +138,23 @@ class StrategyEngine:
                 self._instantiate(name, self.store.params(name))
         elif action == "add_planner_rule":
             planner = self.strategies.get("planner")
-            if planner is not None and hasattr(planner, "add_rule"):
-                try:
-                    planner.add_rule(cmd["rule"])
-                    log.info("planner rule added: %s", cmd["rule"].get("name"))
-                except Exception as exc:  # pragma: no cover
-                    log.warning("bad planner rule rejected: %s", exc)
+            if planner is None or not hasattr(planner, "add_rule"):
+                return
+            # SECURITY: never trust a rule off the bus. Re-validate here so the
+            # engine enforces sandbox + caps regardless of who published it
+            # (defense in depth — the bus has no auth).
+            from apex.ai.llm_planner import validate_rule
+            safe = validate_rule(cmd.get("rule") or {})
+            if not safe:
+                log.warning("rejected unsafe planner rule from bus: %s", cmd.get("rule"))
+                return
+            try:
+                planner.add_rule(safe)
+                log.info("planner rule added (revalidated): %s", safe.get("name"))
+            except Exception as exc:  # pragma: no cover
+                log.warning("bad planner rule rejected: %s", exc)
+        else:
+            log.warning("strategy-engine: unknown COMMAND action %r (ignored)", action)
 
 
 async def run(symbols: list[str] | None = None, enabled: list[str] | None = None) -> None:

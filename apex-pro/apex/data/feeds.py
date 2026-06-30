@@ -26,8 +26,10 @@ log = get_logger("apex.feeds")
 async def yields_loop(interval: float = 1800.0) -> None:
     """Publish DeFi yields every 30 min."""
     bus = await make_bus()
+    loop = asyncio.get_event_loop()
     while True:
-        pools_by_asset = fetch_yields()
+        # Offload the blocking HTTP fetch so it never stalls the event loop.
+        pools_by_asset = await loop.run_in_executor(None, fetch_yields)
         for asset, pools in pools_by_asset.items():
             if pools:
                 await bus.publish(Channels.NEWS,

@@ -13,8 +13,6 @@ from __future__ import annotations
 import asyncio
 import os
 
-from apex.bus.events import Channels
-from apex.bus.redis_bus import make_bus
 from apex.config import get_settings
 from apex.core.logging import get_logger
 from apex.data.feeder import DEFAULT_SYMBOLS
@@ -32,17 +30,6 @@ BANNER = r"""
  / _ \|  _/ _| >  <    |  _/   / (_) |  mode=%s profile=%s live=%s
 /_/ \_\_| |___/_/\_\   |_| |_|_\\___/   strategies=%s
 """
-
-
-async def _heartbeat(rm: RiskManager) -> None:
-    """Publish portfolio snapshots so Telegram/dashboard can read state."""
-    bus = await make_bus()
-    while True:
-        await bus.publish(Channels.HEARTBEAT, {
-            "type": "portfolio", "paused": rm.paused, "reason": rm.pause_reason,
-            "snapshot": rm.pf.snapshot(),
-        })
-        await asyncio.sleep(5)
 
 
 async def main() -> None:
@@ -64,14 +51,15 @@ async def main() -> None:
         log.info("[green]Running in PAPER mode — no real funds at risk[/green]")
 
     from apex.ai import brain
+    from apex.data import feeds
 
     tasks = [
         feeder.run(symbols),
+        feeds.run(symbols),          # NEWS feeds (yields/derivatives/new-pools)
         engine.run(),
-        risk_manager.run(rm),
+        risk_manager.run(rm),        # also publishes the portfolio heartbeat
         execution_gateway.run(gw),
         brain.run(symbols),
-        _heartbeat(rm),
     ]
 
     # Distributed-intelligence council is opt-in (backward compatible).
