@@ -71,6 +71,19 @@
 - ⬜ Multichain bridge router (cheapest-chain fund movement)
 - ⬜ Backtest data lake + automated nightly strategy re-validation
 
+## Phase 3.5 — Distributed intelligence ("more brains") 🟡
+- ✅ Council of single-responsibility brains (analysis/generation/verifier/
+      decision) with a uniform contract (`apex/brains/`)
+- ✅ Router with cost/complexity tiering (local→cheap→premium); free by default
+- ✅ Self-critique VerifierBrain + weighted-consensus ensemble for high risk
+- ✅ Memory: short-term session + long-term SQLite (zero-dep) with per-brain
+      scorecards used as ensemble weights
+- ✅ Graceful fallback chains + per-task cost budget + `apex_brain_*` metrics
+- ✅ Opt-in council service wiring verified proposals into the planner; LLM
+      tiers self-disable without a key. See `docs/BRAINS.md`.
+- ⬜ Outcome-based scorecard updates (close the loop: did the rule make money?)
+- ⬜ gRPC contract for cross-process brain calls (currently in-process)
+
 ## Phase 4 — Advanced (gated, high-risk) ⬜
 - ⬜ Perp leverage execution with dynamic hedging (degen profile)
 - ⬜ Flash-loan arbitrage with mandatory local-fork simulation pre-send

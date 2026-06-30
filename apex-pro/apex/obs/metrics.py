@@ -97,3 +97,11 @@ CASH = REGISTRY.gauge("apex_cash", "Portfolio cash (base currency)")
 DRAWDOWN = REGISTRY.gauge("apex_drawdown_ratio", "Current drawdown 0..1")
 OPEN_POSITIONS = REGISTRY.gauge("apex_open_positions", "Open positions count")
 PAUSED = REGISTRY.gauge("apex_paused", "1 if the agent is paused, else 0")
+
+# --- distributed-intelligence ("more brains") layer -------------------------
+BRAIN_TASKS = REGISTRY.counter("apex_brain_tasks_total", "Brain tasks handled")
+BRAIN_FALLBACKS = REGISTRY.counter("apex_brain_fallbacks_total", "Brain fallback escalations/degradations")
+BRAIN_VERIFICATIONS = REGISTRY.counter("apex_brain_verifications_total", "Verifier outcomes")
+BRAIN_DECISIONS = REGISTRY.counter("apex_brain_decisions_total", "Council decisions by action")
+BRAIN_COST_USD = REGISTRY.gauge("apex_brain_cost_usd_total", "Cumulative LLM spend (USD est.)")
+BRAIN_CONSENSUS = REGISTRY.gauge("apex_brain_consensus_ratio", "Last ensemble consensus ratio 0..1")

@@ -74,6 +74,12 @@ async def main() -> None:
         _heartbeat(rm),
     ]
 
+    # Distributed-intelligence council is opt-in (backward compatible).
+    if s.enable_council:
+        from apex.services import council as council_svc
+        log.info("[magenta]Council ENABLED[/magenta] — multi-brain deliberation on")
+        tasks.append(council_svc.run())
+
     # Telegram is optional — only start if a token is configured.
     if s.telegram_token:
         from apex.telegram.bot import run_bot

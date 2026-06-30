@@ -91,6 +91,7 @@ class Settings:
     risk_profile: RiskProfile = RiskProfile(os.getenv("APEX_RISK_PROFILE", "conservative").lower())
     live_trading_enabled: bool = _b("APEX_LIVE_TRADING_ENABLED", False)
     degen_requires_confirmation: bool = _b("APEX_DEGEN_REQUIRES_CONFIRMATION", True)
+    enable_council: bool = _b("APEX_ENABLE_COUNCIL", False)
     base_currency: str = os.getenv("APEX_BASE_CURRENCY", "USDT")
     paper_balance: float = _f("APEX_PAPER_BALANCE", 10_000.0)
 
